@@ -1,37 +1,60 @@
-import {router} from "expo-router";
-import {View} from "react-native";
-import {Button} from "@/components/Button/Button";
-import {Text} from "@/components/Text/Text";
-import {PATHS} from "@/constants/routes";
-import {styles} from "@/styles";
+import {useRouter} from "expo-router";
+import {useAtom} from "jotai";
+import {useEffect} from "react";
+import {ActivityIndicator, Text, View} from "react-native";
+import {activeRideAtom, roleAtom, userAtom} from "@/atoms/store";
+import {STRINGS} from "@/constants/strings";
+import {getDeviceId} from "@/utils/device";
+import {isRideActive} from "@/utils/ride";
 
 export default function Index() {
-    return (
-        <View style={styles.centerLayer}>
-            <Text type="title">Welcome to Boilerplate Expo</Text>
-            <Text type="subtitle">by Binni Cordova</Text>
-            <Text type="default">
-                I poured my 7+ years of mobile development expertise into
-                crafting this boilerplate: a production-ready Expo starter
-                complete with background tasks, push notifications, Storybook
-                integration, automated testing, formatting, and CI/CD workflows.
-                It’s designed to help you ship robust apps faster—so you can
-                focus on features, not setup. It’s also fully compatible as a
-                foundation for AI-assisted development, making it an excellent
-                baseline for AI-driven workflows.
-            </Text>
+    const [user, setUser] = useAtom(userAtom);
+    const [role] = useAtom(roleAtom);
+    const [activeRide] = useAtom(activeRideAtom);
+    const router = useRouter();
 
-            <Button
-                title="Connect on LinkedIn"
-                onPress={() =>
-                    router.push(
-                        PATHS.WEB(
-                            "https://www.linkedin.com/in/binni-cordova-a77000175/",
-                            "Binni Cordova + Expert Mobile Developer"
-                        )
-                    )
+    // Handle "Authentication" (Local ID generation)
+    useEffect(() => {
+        if (!user) {
+            // Create a new anonymous user ID
+            getDeviceId().then((uid) => setUser({uid}));
+        }
+    }, [user, setUser]);
+
+    // Handle Routing based on Auth & Role
+    useEffect(() => {
+        if (user) {
+            if (!role) {
+                router.replace("/role-selector");
+                return;
+            }
+
+            // Check for active ride persistence
+            const isActive = activeRide && isRideActive(activeRide.status);
+
+            if (isActive) {
+                if (role === "client") {
+                    router.replace("/client/ride");
+                    return;
                 }
-            />
+                if (role === "driver") {
+                    router.replace("/driver/ride");
+                    return;
+                }
+            }
+
+            if (role === "client") {
+                router.replace("/client/home");
+            } else if (role === "driver") {
+                router.replace("/driver/dashboard");
+            }
+        }
+    }, [user, role, activeRide, router]);
+
+    return (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <ActivityIndicator size="large" />
+            <Text style={{marginTop: 20}}>{STRINGS.common.loadingApp}</Text>
         </View>
     );
 }

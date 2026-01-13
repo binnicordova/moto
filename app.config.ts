@@ -2,27 +2,27 @@ import "dotenv/config";
 import type {ExpoConfig} from "@expo/config-types";
 
 const EAS_OWNER = process.env.EAS_OWNER; // by https://www.binnicordova.com
-const EAS_SLUG = "expo-boilerplate";
+const EAS_SLUG = "moto";
 const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID;
 
-const VERSION = "0.0.4";
-const VERSION_CODE = 4;
+const VERSION = "0.0.1";
+const VERSION_CODE = 1;
 
 const APP_VARIANTS = {
     development: {
-        identifier: "com.expo.dev",
-        name: "Expo (Dev)",
-        scheme: "dev.expo.com",
+        identifier: "com.motoai.dev",
+        name: "Moto (Dev)",
+        scheme: "dev.motoai.com",
     },
     preview: {
-        identifier: "com.expo.preview",
-        name: "Expo (Preview)",
-        scheme: "preview.expo.com",
+        identifier: "com.motoai.preview",
+        name: "Moto (Preview)",
+        scheme: "preview.motoai.com",
     },
     production: {
-        identifier: "com.expo",
-        name: "Expo",
-        scheme: "expo.com",
+        identifier: "com.motoai",
+        name: "Moto",
+        scheme: "motoai.com",
     },
 };
 
@@ -106,5 +106,13 @@ export default ({config}: {config: ExpoConfig}): ExpoConfig => ({
         ],
         "expo-updates",
         "expo-background-task",
+        [
+            "expo-maps",
+            {
+                requestLocationPermission: true,
+                locationPermission:
+                    "Allow $(PRODUCT_NAME) to use your location",
+            },
+        ],
     ],
 });

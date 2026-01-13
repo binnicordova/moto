@@ -1,99 +1,79 @@
-![Expo React Native Boilerplate](./resources/expo-rn-boilerplate_bcordova.gif)
+<p align="center">
+  <img src="./resources/moto-2.png" alt="App Home" width="200" />
+  <img src="./resources/moto-3.png" alt="App Pending" width="200" />
+  <img src="./resources/moto-4.png" alt="App Accepted" width="200" />
+  <img src="./resources/moto-5.png" alt="App In Progress" width="200" />
+</p>
 
-# Expo Boilerplate v0.0.4 — Simple & Friendly by [binnicordova.com](https://binnicordova.com) [LinkedIn](https://www.linkedin.com/in/binnicordova)
+# Moto — Rickshaw Taxi App
 
-A short, easy-to-understand starter for building mobile apps with Expo + React Native. It includes common tools so teams can move faster without dealing with setup details.
+Moto is a local rickshaw (auto) taxi app that connects riders with nearby drivers for short, affordable urban trips. Built with Expo + React Native and powered by EAS, this repository contains the app code, assets, and scripts used to build and publish Moto.
 
-**Who is this for?**
-- Product people and designers who want a quick overview.
-- Developers who need a ready-to-use project.
+# How Moto works
 
-## Quick start
+```mermaid
+sequenceDiagram
+    participant Client
+    participant MotoApp
+    participant Driver
 
-1. Use the template to create a new Expo project:
+    Client->>MotoApp: Request Ride
+    MotoApp->>Driver: Notify Driver
+    Driver->>MotoApp: Accept Ride
+    MotoApp->>Client: Confirm Driver
+    Driver->>MotoApp: Update Location
+    MotoApp->>Client: Track Driver
+    Driver->>MotoApp: Complete Ride
+    MotoApp->>Client: Notify Completion
 
-```sh
-pnpx create-expo --template https://github.com/BinniZenobioCordovaLeandro/expo-boilerplate_binnicordova
+    Note over Client,MotoApp: Local-first: Data stored locally
+    Note over MotoApp,Driver: Privacy-first: Interchange only minimal data
 ```
 
-2. Install dependencies:
+## What Moto does
+- Book rickshaw rides quickly (pickup within minutes)
+- Live driver tracking and simple in-app communication
+- Transparent fares and ETAs
+- Cash and card payments with ride history
+- Driver ratings and safety features
 
-```sh
+## Quick start (this repo)
+1. Install dependencies:
+
+```bash
 pnpm install
 ```
 
-3. Run and preview on your iPhone or Android device (scan the QR in Expo Go):
+2. Run locally (Expo):
 
-```sh
+```bash
 pnpm start
 ```
 
-## Helpful commands
+3. Build for production with EAS:
 
-- **Preview on a device**: `pnpm run eas-preview`
-- **Run component stories**: `pnpm run storybook:start`
-- **Run tests**: `pnpm run test`
-
-## Where to look in the code (Project Structure)
-
-This project follows a clear and scalable structure inside the `src/` directory:
-
-- 📂 **Main code**: `src/`
-- 📱 **App screens**: `src/app/` (Expo Router file-based routing)
-- 🧩 **Shared components**: `src/components/` (Reusable UI elements)
-- 📦 **State management**: `src/stores/` (Global state using Jotai)
-- 🎣 **Hooks**: `src/hooks/` (Custom React hooks)
-- 🎨 **Theme & Styles**: `src/theme/` and `src/styles/` (Design tokens and global styles)
-- 🛠️ **Utils**: `src/utils/` (Helper functions)
-
-## Technical Stack Details (Architecture)
-
-This project is built with a modern and robust stack:
-
-- **Framework**: Expo / React Native
-- **Language**: TypeScript
-- **Navigation**: Expo Router (File-based routing)
-- **State Management**: Jotai (Atomic state)
-- **Styling**: Styled Components / StyleSheet
-- **Testing**: Jest
-
-## Deployment (AppStore / PlayStore / Web)
-
-When you’re ready to publish, use **EAS (Expo Application Services)**:
-
-**Build for Production:**
-```sh
+```bash
 pnpm run build:prod
 ```
 
-**Update over the Air (OTA):**
-```sh
-pnpm run update:prod
+4. Over The Air (OTA) updates with EAS Update:
+
+```bash
+eas update --branch production
 ```
 
-## Reset Project & Tools
+5. Submit to Play Store with EAS Submit:
 
-**Reset the Project:**
-To reset the project and remove all example code, run the following command:
-```sh
-pnpm run reset-project
+```bash
+eas submit -p android --latest
 ```
 
-**Generate Assets:**
-Generate the Assets to the app and Stores with simple script:
-```sh
-pnpm run generate:branding
-```
-
-## 🤖 AI automation prompts
-
-Use the AI powerups tipying "#" and the prompt into your AI chatbox editor:
-
-```
-#EXPO-RELEASE-NEXT-VERSION.prompt.md
-#EXPO-TEST-CREATE.prompt.md
-#EXPO-DOC-README-CREATE.prompt
-```
+## Minimum Play Console items (first publish)
+- Production: start rollout (e.g. 1 (0.0.1))
+- Countries/regions: add at least one (e.g. Peru)
+- Store listings: language(s) and default listing (e.g. es-419 with app name "Moto")
+- App content: content rating questionnaire, target audience (13+), privacy policy URL, ads declaration, data safety questionnaire
+- Store settings: app category (Travel & Local)
 
 ## 📬 Connect with Binni Cordova
 
