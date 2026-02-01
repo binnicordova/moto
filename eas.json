@@ -21,6 +21,7 @@
         },
         "production": {
             "channel": "production",
+            "autoIncrement": true,
             "env": {
                 "FIREBASE_API_KEY": "@eas:secret:FIREBASE_API_KEY_PRODUCTION",
                 "FIREBASE_AUTH_DOMAIN": "@eas:secret:FIREBASE_AUTH_DOMAIN_PRODUCTION",
@@ -28,6 +29,12 @@
                 "FIREBASE_STORAGE_BUCKET": "@eas:secret:FIREBASE_STORAGE_BUCKET_PRODUCTION",
                 "FIREBASE_MESSAGING_SENDER_ID": "@eas:secret:FIREBASE_MESSAGING_SENDER_ID_PRODUCTION",
                 "FIREBASE_APP_ID": "@eas:secret:FIREBASE_APP_ID_PRODUCTION"
+            }
+        },
+        "production_apk": {
+            "extends": "production",
+            "android": {
+                "buildType": "apk"
             }
         }
     },

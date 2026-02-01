@@ -5,8 +5,8 @@ const EAS_OWNER = process.env.EAS_OWNER; // by https://www.binnicordova.com
 const EAS_SLUG = "moto";
 const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID;
 
-const VERSION = "0.0.1";
-const VERSION_CODE = 1;
+const VERSION = "0.0.2";
+const VERSION_CODE = 2;
 
 const APP_VARIANTS = {
     development: {

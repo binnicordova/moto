@@ -1,10 +1,11 @@
 {
     "name": "moto",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "./src/AppEntry.tsx",
     "license": "MIT",
     "scripts": {
         "start": "expo start --clear",
+        "start:prod": "APP_VARIANT=production npx expo start",
         "dev": "APP_VARIANT=development npx expo start",
         "prev": "APP_VARIANT=preview npx expo start",
         "android": "expo start --android",
@@ -29,6 +30,7 @@
         "build:prod": "eas build --platform all --profile production",
         "build:prod:android": "eas build --platform android --profile production",
         "build:prod:ios": "eas build --platform ios --profile production",
+        "build:prod:apk": "eas build --platform android --profile production_apk",
         "update:dev": "eas update --branch development --message \"Development update - $(date '+%Y-%m-%d %H:%M')\"",
         "update:preview": "eas update --branch preview --message \"Preview update - $(date '+%Y-%m-%d %H:%M')\"",
         "update:prod": "eas update --branch production --message \"Production update - $(date '+%Y-%m-%d %H:%M')\"",
@@ -42,7 +44,7 @@
     },
     "dependencies": {
         "@shopify/flash-list": "2.0.2",
-        "expo": "~54.0.31",
+        "expo": "~54.0.32",
         "expo-application": "~7.0.8",
         "expo-background-task": "^1.0.10",
         "expo-constants": "~18.0.13",
@@ -50,7 +52,7 @@
         "expo-location": "^19.0.8",
         "expo-maps": "~0.12.10",
         "expo-notifications": "~0.32.16",
-        "expo-router": "~6.0.21",
+        "expo-router": "~6.0.22",
         "expo-splash-screen": "^31.0.13",
         "expo-status-bar": "~3.0.9",
         "expo-task-manager": "~14.0.9",
