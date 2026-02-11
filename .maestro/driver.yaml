@@ -1,0 +1,36 @@
+# Driver Happy Path (Multi-Device)
+# Run this on Device B
+appId: com.motoai.dev
+---
+- launchApp:
+    permissions:
+        location: allowed
+    clearState: true
+# This test assumes the device ID is authorized as a driver.
+- assertVisible: "Panel del Conductor"
+
+# Go Online
+- assertVisible: "Conectarse"
+- tapOn:
+    id: "driver-online-switch"
+- assertVisible: "Conectado"
+
+# Wait for Client Request (from Device A)
+# Assuming only one request for simplicity or matching the first one
+- assertVisible: "Distancia:.*"
+
+- tapOn: "Aceptar"
+- assertVisible: "¡Viaje Aceptado!"
+- tapOn: "OK"
+
+# Driver Ride Screen
+- assertVisible: "Recogiendo Pasajero"
+- tapOn: "Pasajero Recogido"
+- assertVisible: "Viaje en Curso"
+- tapOn: "Completar Viaje"
+- assertVisible: "Viaje Finalizado"
+- tapOn: "Volver al Panel"
+
+# Back to Dashboard
+- assertVisible: "Panel del Conductor"
+

@@ -4,11 +4,12 @@ import {doc, serverTimestamp, setDoc} from "firebase/firestore";
 import {useAtom} from "jotai";
 import {useEffect, useState} from "react";
 import {ActivityIndicator, Alert, StyleSheet, Text, View} from "react-native";
-import MapView from "react-native-maps";
 import {activeRideAtom, type Ride, userAtom} from "@/atoms/store";
 import {Button} from "@/components/Button/Button";
+import {Map} from "@/components/Map";
 import {CenterMarker} from "@/components/Markers";
 import {db} from "@/config/firebase";
+import {ROUTES} from "@/constants/routes";
 import {STRINGS} from "@/constants/strings";
 
 export default function ClientHome() {
@@ -78,7 +79,7 @@ export default function ClientHome() {
             Alert.alert(
                 STRINGS.common.success,
                 STRINGS.clientHome.requestSuccess
-            );
+            );ROUTES.CLIENT.RIDE
             router.push("/client/ride");
         } catch (e) {
             console.error(e);
@@ -105,7 +106,7 @@ export default function ClientHome() {
 
     return (
         <View style={styles.container}>
-            <MapView
+            <Map
                 style={styles.map}
                 initialRegion={{
                     latitude: location.coords.latitude,
@@ -113,7 +114,6 @@ export default function ClientHome() {
                     latitudeDelta: 0.005,
                     longitudeDelta: 0.005,
                 }}
-                showsUserLocation
                 onRegionChangeComplete={(region) => {
                     setPickupLocation({
                         latitude: region.latitude,

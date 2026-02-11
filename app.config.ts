@@ -5,8 +5,8 @@ const EAS_OWNER = process.env.EAS_OWNER; // by https://www.binnicordova.com
 const EAS_SLUG = "moto";
 const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID;
 
-const VERSION = "0.0.2";
-const VERSION_CODE = 2;
+const VERSION = "0.0.4";
+const VERSION_CODE = 4;
 
 const APP_VARIANTS = {
     development: {
@@ -64,6 +64,9 @@ export default ({config}: {config: ExpoConfig}): ExpoConfig => ({
         infoPlist: {
             UIBackgroundModes: ["process"],
         },
+        config: {
+            googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY, // by https://www.binnicordova.com
+        },
     },
     android: {
         adaptiveIcon: {
@@ -71,6 +74,11 @@ export default ({config}: {config: ExpoConfig}): ExpoConfig => ({
             backgroundColor: "#FFFFFF",
         },
         package: getUniqueIdentifier(),
+        config: {
+            googleMaps: {
+                apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY, // by https://www.binnicordova.com
+            },
+        },
     },
     web: {
         favicon: "./assets/favicon.png",

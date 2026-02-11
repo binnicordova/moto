@@ -1,0 +1,25 @@
+# Client Happy Path (Multi-Device)
+# Run this on Device A
+appId: com.motoai.dev
+---
+- launchApp:
+    permissions:
+        location: allowed
+    clearState: true
+- assertVisible: "Solicitar Viaje Aquí"
+- tapOn: "Solicitar Viaje Aquí"
+- assertVisible: "Buscando tu Moto..."
+
+# Wait for Driver to Accept (on Device B)
+- assertVisible: "Tu conductor está cerca"
+
+# Wait for Driver to Pickup (on Device B)
+- assertVisible: "Viaje en Curso"
+
+# Wait for Driver to Complete (on Device B)
+- assertVisible: "¡Llegaste a tu destino!"
+- assertVisible: "Volver al Inicio"
+
+# Return to Home
+- tapOn: "Volver al Inicio"
+- assertVisible: "Solicitar Viaje Aquí"

@@ -1,16 +1,18 @@
 import * as Location from "expo-location";
 import {useRouter} from "expo-router";
-import {doc, onSnapshot, updateDoc} from "firebase/firestore";
+import {doc, onSnapshot, updateDoc, serverTimestamp} from "firebase/firestore";
 import {useAtom} from "jotai";
 import {useEffect, useRef, useState} from "react";
 import {Alert, Linking, StyleSheet, Text, View} from "react-native";
-import MapView, {Polyline, PROVIDER_DEFAULT} from "react-native-maps";
+import MapView, {Polyline} from "react-native-maps";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {activeRideAtom, type Ride} from "@/atoms/store";
 import {Button} from "@/components/Button/Button";
+import {Map} from "@/components/Map";
 import {ClientMarker, PickupMarker} from "@/components/Markers";
 import {db} from "@/config/firebase";
 import {WHATSAPP_SUPPORT_URL} from "@/constants/env";
+import {ROUTES} from "@/constants/routes";
 import {STRINGS} from "@/constants/strings";
 import {getRoutePolyline, type LatLng} from "@/services/map";
 import {getFormattedDistance} from "@/utils/distance";
@@ -33,7 +35,7 @@ export default function DriverRide() {
 
     useEffect(() => {
         if (!activeRide?.id) {
-            if (!rideData) router.replace("/driver/dashboard");
+            if (!rideData) router.replace(ROUTES.DRIVER.DASHBOARD);
             return;
         }
 
@@ -51,7 +53,7 @@ export default function DriverRide() {
                     }
                 } else {
                     setActiveRide(null);
-                    router.replace("/driver/dashboard");
+                    router.replace(ROUTES.DRIVER.DASHBOARD);
                 }
             }
         );
@@ -216,7 +218,7 @@ export default function DriverRide() {
         await updateDoc(doc(db, "rides", activeRide.id), updatePayload);
         if (status === "completed") {
             setActiveRide(null);
-            router.replace("/driver/dashboard");
+            router.replace(ROUTES.DRIVER.DASHBOARD);
         }
     };
 
@@ -235,9 +237,10 @@ export default function DriverRide() {
                         try {
                             await updateDoc(doc(db, "rides", activeRide.id), {
                                 status: "driver_canceled",
+                                canceledAt: serverTimestamp(),
                             });
                             setActiveRide(null);
-                            router.replace("/driver/dashboard");
+                            router.replace(ROUTES.DRIVER.DASHBOARD);
                         } catch (e) {
                             console.error("Error driver cancelling ride:", e);
                             Alert.alert(
@@ -283,11 +286,9 @@ export default function DriverRide() {
                     />
                 </View>
             )}
-            <MapView
+            <Map
                 ref={mapRef}
                 style={styles.map}
-                provider={PROVIDER_DEFAULT}
-                showsUserLocation
                 initialRegion={{
                     latitude:
                         location?.coords.latitude ||
@@ -323,7 +324,7 @@ export default function DriverRide() {
                             )}
                     </>
                 )}
-            </MapView>
+            </Map>
 
             <View style={styles.overlay}>
                 <View style={styles.infoCard}>
@@ -367,7 +368,7 @@ export default function DriverRide() {
                                 title={STRINGS.driverRide.backToDashboard}
                                 onPress={() => {
                                     setActiveRide(null);
-                                    router.replace("/driver/dashboard");
+                                    router.replace(ROUTES.DRIVER.DASHBOARD);
                                 }}
                             />
                         )}

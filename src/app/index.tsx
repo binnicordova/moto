@@ -1,60 +1,41 @@
 import {useRouter} from "expo-router";
-import {useAtom} from "jotai";
+import {useSetAtom} from "jotai";
 import {useEffect} from "react";
 import {ActivityIndicator, Text, View} from "react-native";
-import {activeRideAtom, roleAtom, userAtom} from "@/atoms/store";
+import {initializeAppAtom} from "@/atoms/role";
 import {STRINGS} from "@/constants/strings";
-import {getDeviceId} from "@/utils/device";
-import {isRideActive} from "@/utils/ride";
 
 export default function Index() {
-    const [user, setUser] = useAtom(userAtom);
-    const [role] = useAtom(roleAtom);
-    const [activeRide] = useAtom(activeRideAtom);
+    const initializeApp = useSetAtom(initializeAppAtom);
     const router = useRouter();
 
-    // Handle "Authentication" (Local ID generation)
     useEffect(() => {
-        if (!user) {
-            // Create a new anonymous user ID
-            getDeviceId().then((uid) => setUser({uid}));
-        }
-    }, [user, setUser]);
+        let mounted = true;
 
-    // Handle Routing based on Auth & Role
-    useEffect(() => {
-        if (user) {
-            if (!role) {
-                router.replace("/role-selector");
-                return;
-            }
-
-            // Check for active ride persistence
-            const isActive = activeRide && isRideActive(activeRide.status);
-
-            if (isActive) {
-                if (role === "client") {
-                    router.replace("/client/ride");
-                    return;
+        const init = async () => {
+            try {
+                const route = await initializeApp();
+                if (mounted && route) {
+                    router.replace(route);
                 }
-                if (role === "driver") {
-                    router.replace("/driver/ride");
-                    return;
-                }
+            } catch (error) {
+                console.error("Initialization failed:", error);
             }
+        };
 
-            if (role === "client") {
-                router.replace("/client/home");
-            } else if (role === "driver") {
-                router.replace("/driver/dashboard");
-            }
-        }
-    }, [user, role, activeRide, router]);
+        init();
+
+        return () => {
+            mounted = false;
+        };
+    }, [initializeApp, router]);
 
     return (
         <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
             <ActivityIndicator size="large" />
-            <Text style={{marginTop: 20}}>{STRINGS.common.loadingApp}</Text>
+            <Text style={{marginTop: 20}}>
+                {STRINGS.common?.loadingApp || "Loading..."}
+            </Text>
         </View>
     );
 }

@@ -25,6 +25,7 @@ import {
     MAX_RIDE_DISTANCE_METERS,
     RIDE_REQUEST_FILTER_MINUTES,
 } from "@/constants/env";
+import {ROUTES} from "@/constants/routes";
 import {STRINGS} from "@/constants/strings";
 import {getDistanceInMeters, getFormattedDistance} from "@/utils/distance";
 import {getFormattedTime} from "@/utils/time";
@@ -161,7 +162,7 @@ export default function DriverDashboard() {
                     status: "accepted",
                     driverId: user?.uid,
                 });
-                router.push("/driver/ride");
+                router.push(ROUTES.DRIVER.RIDE);
             }
 
             Alert.alert(STRINGS.driverDashboard.rideAccepted);
@@ -186,7 +187,11 @@ export default function DriverDashboard() {
                             ? STRINGS.driverDashboard.online
                             : STRINGS.driverDashboard.offline}
                     </Text>
-                    <Switch value={isOnline} onValueChange={setIsOnline} />
+                    <Switch
+                        testID="driver-online-switch"
+                        value={isOnline}
+                        onValueChange={setIsOnline}
+                    />
                 </View>
             </View>
 

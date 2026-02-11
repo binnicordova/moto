@@ -1,5 +1,6 @@
 import {getDefaultStore} from "jotai";
 import {roleAtom} from "@/atoms/store";
+import {ROLES} from "@/constants/roles";
 import {getDeviceId} from "@/utils/device";
 
 const CONFIG_DOCUMENT =
@@ -32,8 +33,8 @@ export const remoteConfigService: RemoteConfigService = {
                 const currentRole = store.get(roleAtom);
 
                 // Only switch if they're currently set as driver
-                if (currentRole === "driver") {
-                    store.set(roleAtom, "client");
+                if (currentRole === ROLES.DRIVER) {
+                    store.set(roleAtom, ROLES.CLIENT);
                     console.log(
                         "User authorization revoked - switching to client role"
                     );

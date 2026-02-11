@@ -18,11 +18,13 @@ export type ButtonVariant =
 export type ButtonProps = RNButtonProps & {
     variant?: ButtonVariant;
     style?: ViewStyle | ViewStyle[];
+    onLongPress?: () => void;
 };
 
 export const Button = ({
     title,
     onPress,
+    onLongPress,
     disabled,
     variant = "primary",
     style,
@@ -68,6 +70,7 @@ export const Button = ({
                 style,
             ]}
             onPress={disabled ? undefined : onPress}
+            onLongPress={disabled ? undefined: onLongPress}
             disabled={disabled}
         >
             <Text style={[styles.text, {color: contentColor}]}>{title}</Text>

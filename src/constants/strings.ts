@@ -48,6 +48,11 @@ export const STRINGS = {
         cancel_request: "Cancelar",
         driverAssigned: "¡Conductor asignado!",
         driverNear: "Tu conductor está cerca",
+        cancel_confirm_title: "Confirmar Cancelación",
+        cancel_confirm_message:
+            "¿Estás seguro de que deseas cancelar tu solicitud de viaje?",
+        no_keep: "No, mantener",
+        yes_cancel: "Sí, cancelar",
         inProgress: "Viaje en curso",
         completed: "¡Llegaste a tu destino!",
         clientCanceled: "Viaje cancelado por ti",

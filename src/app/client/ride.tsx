@@ -1,6 +1,6 @@
 import * as Location from "expo-location";
 import {useRouter} from "expo-router";
-import {doc, onSnapshot, updateDoc} from "firebase/firestore";
+import {doc, onSnapshot, updateDoc, serverTimestamp} from "firebase/firestore";
 import {useAtom} from "jotai";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {
@@ -17,9 +17,11 @@ import MapView, {Polyline} from "react-native-maps";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {activeRideAtom, type Ride} from "@/atoms/store";
 import {Button} from "@/components/Button/Button";
+import {Map} from "@/components/Map";
 import {DriverMarker, PickupMarker} from "@/components/Markers";
 import {db} from "@/config/firebase";
 import {WHATSAPP_REPORT_URL, WHATSAPP_SUPPORT_URL} from "@/constants/env";
+import {ROUTES} from "@/constants/routes";
 import {STRINGS} from "@/constants/strings";
 import {getRoutePolyline, type LatLng} from "@/services/map";
 import {isRideFinished} from "@/utils/ride";
@@ -36,15 +38,32 @@ export default function ClientRide() {
 
     const handleCancelRide = useCallback(async () => {
         if (!activeRide?.id) return;
-        try {
-            await updateDoc(doc(db, "rides", activeRide.id), {
-                status: "client_canceled",
-            });
-            setActiveRide(null);
-            router.replace("/client/home");
-        } catch (e) {
-            console.error("Error cancelling ride:", e);
-        }
+        Alert.alert(
+            STRINGS.ride.cancel_confirm_title,
+            STRINGS.ride.cancel_confirm_message,
+            [
+                {
+                    text: STRINGS.ride.no_keep,
+                    style: "cancel",
+                },
+                {
+                    text: STRINGS.ride.yes_cancel,
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            await updateDoc(doc(db, "rides", activeRide.id), {
+                                status: "client_canceled",
+                                canceledAt: serverTimestamp(),
+                            });
+                            setActiveRide(null);
+                            router.replace(ROUTES.CLIENT.HOME);
+                        } catch (e) {
+                            console.error("Error cancelling ride:", e);
+                        }
+                    },
+                },
+            ]
+        );
     }, [activeRide?.id, setActiveRide, router.replace]);
 
     // Sync ref with state
@@ -147,7 +166,7 @@ export default function ClientRide() {
 
     useEffect(() => {
         if (!activeRide?.id) {
-            router.replace("/client/home");
+            router.replace(ROUTES.CLIENT.HOME);
             return;
         }
 
@@ -164,7 +183,7 @@ export default function ClientRide() {
                     // Document deleted or missing
                     console.log("Ride document missing, resetting state");
                     setActiveRide(null);
-                    router.replace("/client/home");
+                    router.replace(ROUTES.CLIENT.HOME);
                 }
             },
             (error) => {
@@ -259,12 +278,12 @@ export default function ClientRide() {
                 >
                     <Button
                         title={STRINGS.ride.cancel_request}
-                        onPress={handleCancelRide}
+                        onLongPress={handleCancelRide}
                         variant="danger"
                     />
                 </View>
             )}
-            <MapView
+            <Map
                 ref={mapRef}
                 style={styles.map}
                 initialRegion={{
@@ -288,7 +307,7 @@ export default function ClientRide() {
                             strokeWidth={6}
                         />
                     )}
-            </MapView>
+            </Map>
             <View style={styles.statusPanel}>
                 <Text style={styles.statusText}>
                     {activeRide.status === "pending" && STRINGS.ride.searching}
@@ -346,7 +365,7 @@ export default function ClientRide() {
                             title={STRINGS.common.back_to_start}
                             onPress={() => {
                                 setActiveRide(null);
-                                router.replace("/client/home");
+                                router.replace(ROUTES.CLIENT.HOME);
                             }}
                         />
                     </View>
